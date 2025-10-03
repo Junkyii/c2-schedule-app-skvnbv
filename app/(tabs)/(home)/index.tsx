@@ -1,11 +1,17 @@
+
 import React from "react";
 import { Stack } from "expo-router";
 import { StyleSheet, View, Text, Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
-import { colors, commonStyles } from "@/styles/commonStyles";
+import { getColors, createThemedStyles } from "@/styles/commonStyles";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function HomeScreen() {
+  const { isDark } = useTheme();
+  const colors = getColors(isDark);
+  const themedStyles = createThemedStyles(isDark);
+  
   const currentDate = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
     year: 'numeric',
@@ -26,7 +32,7 @@ export default function HomeScreen() {
           }}
         />
       )}
-      <SafeAreaView style={[commonStyles.wrapper, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[themedStyles.wrapper, { backgroundColor: colors.background }]}>
         <ScrollView 
           style={styles.scrollView}
           contentContainerStyle={[
@@ -36,68 +42,68 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Welcome Section */}
-          <View style={[styles.welcomeSection, commonStyles.card]}>
+          <View style={[styles.welcomeSection, themedStyles.card]}>
             <View style={styles.welcomeHeader}>
               <IconSymbol name="graduationcap" size={32} color={colors.primary} />
               <View style={styles.welcomeText}>
-                <Text style={styles.welcomeTitle}>Selamat Datang!</Text>
-                <Text style={styles.welcomeSubtitle}>KRS KELAS C2</Text>
+                <Text style={[styles.welcomeTitle, { color: colors.text }]}>Selamat Datang!</Text>
+                <Text style={[styles.welcomeSubtitle, { color: colors.primary }]}>KRS KELAS C2</Text>
               </View>
             </View>
-            <Text style={styles.dateText}>{currentDate}</Text>
+            <Text style={[styles.dateText, { color: colors.textSecondary }]}>{currentDate}</Text>
           </View>
 
           {/* Quick Stats */}
-          <View style={[styles.statsSection, commonStyles.card]}>
-            <Text style={styles.sectionTitle}>Ringkasan Semester</Text>
+          <View style={[styles.statsSection, themedStyles.card]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Ringkasan Semester</Text>
             <View style={styles.statsGrid}>
-              <View style={styles.statCard}>
+              <View style={[styles.statCard, { backgroundColor: colors.highlight }]}>
                 <IconSymbol name="book.closed" size={24} color={colors.primary} />
-                <Text style={styles.statNumber}>8</Text>
-                <Text style={styles.statLabel}>Mata Kuliah</Text>
+                <Text style={[styles.statNumber, { color: colors.text }]}>8</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Mata Kuliah</Text>
               </View>
-              <View style={styles.statCard}>
+              <View style={[styles.statCard, { backgroundColor: colors.highlight }]}>
                 <IconSymbol name="chart.bar" size={24} color={colors.accent} />
-                <Text style={styles.statNumber}>19</Text>
-                <Text style={styles.statLabel}>Total SKS</Text>
+                <Text style={[styles.statNumber, { color: colors.text }]}>19</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Total SKS</Text>
               </View>
-              <View style={styles.statCard}>
+              <View style={[styles.statCard, { backgroundColor: colors.highlight }]}>
                 <IconSymbol name="calendar" size={24} color={colors.secondary} />
-                <Text style={styles.statNumber}>3</Text>
-                <Text style={styles.statLabel}>Hari Kuliah</Text>
+                <Text style={[styles.statNumber, { color: colors.text }]}>3</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Hari Kuliah</Text>
               </View>
             </View>
           </View>
 
           {/* Today's Schedule Preview */}
-          <View style={[styles.todaySection, commonStyles.card]}>
+          <View style={[styles.todaySection, themedStyles.card]}>
             <View style={styles.todaySectionHeader}>
               <IconSymbol name="clock" size={24} color={colors.primary} />
-              <Text style={styles.sectionTitle}>Jadwal Hari Ini</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Jadwal Hari Ini</Text>
             </View>
             <View style={styles.noSchedule}>
               <IconSymbol name="checkmark.circle" size={48} color={colors.textSecondary} />
-              <Text style={styles.noScheduleText}>Tidak ada jadwal kuliah hari ini</Text>
-              <Text style={styles.noScheduleSubtext}>Nikmati waktu luang Anda!</Text>
+              <Text style={[styles.noScheduleText, { color: colors.text }]}>Tidak ada jadwal kuliah hari ini</Text>
+              <Text style={[styles.noScheduleSubtext, { color: colors.textSecondary }]}>Nikmati waktu luang Anda!</Text>
             </View>
           </View>
 
           {/* Quick Actions */}
-          <View style={[styles.actionsSection, commonStyles.card]}>
-            <Text style={styles.sectionTitle}>Aksi Cepat</Text>
+          <View style={[styles.actionsSection, themedStyles.card]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Aksi Cepat</Text>
             <View style={styles.actionsList}>
-              <View style={styles.actionItem}>
-                <View style={styles.actionIcon}>
+              <View style={[styles.actionItem, { backgroundColor: colors.highlight }]}>
+                <View style={[styles.actionIcon, { backgroundColor: colors.primary }]}>
                   <IconSymbol name="calendar" size={20} color={colors.card} />
                 </View>
-                <Text style={styles.actionText}>Lihat Jadwal Lengkap</Text>
+                <Text style={[styles.actionText, { color: colors.text }]}>Lihat Jadwal Lengkap</Text>
                 <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
               </View>
-              <View style={styles.actionItem}>
+              <View style={[styles.actionItem, { backgroundColor: colors.highlight }]}>
                 <View style={[styles.actionIcon, { backgroundColor: colors.accent }]}>
-                  <IconSymbol name="bell" size={20} color={colors.text} />
+                  <IconSymbol name="bell" size={20} color={isDark ? colors.background : colors.text} />
                 </View>
-                <Text style={styles.actionText}>Atur Pengingat</Text>
+                <Text style={[styles.actionText, { color: colors.text }]}>Atur Pengingat</Text>
                 <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
               </View>
             </View>
@@ -133,17 +139,14 @@ const styles = StyleSheet.create({
   welcomeTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.text,
   },
   welcomeSubtitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.primary,
     marginTop: 2,
   },
   dateText: {
     fontSize: 14,
-    color: colors.textSecondary,
     textAlign: 'center',
     marginTop: 8,
   },
@@ -153,7 +156,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.text,
     marginBottom: 16,
   },
   statsGrid: {
@@ -164,20 +166,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     padding: 12,
-    backgroundColor: colors.highlight,
     borderRadius: 12,
     marginHorizontal: 4,
   },
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.text,
     marginTop: 8,
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   todaySection: {
@@ -195,13 +194,11 @@ const styles = StyleSheet.create({
   noScheduleText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
     marginTop: 12,
     marginBottom: 4,
   },
   noScheduleSubtext: {
     fontSize: 14,
-    color: colors.textSecondary,
   },
   actionsSection: {
     marginBottom: 16,
@@ -213,14 +210,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,
-    backgroundColor: colors.highlight,
     borderRadius: 12,
   },
   actionIcon: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -229,6 +224,5 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '500',
-    color: colors.text,
   },
 });

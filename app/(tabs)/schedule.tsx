@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
-import { colors, commonStyles } from '@/styles/commonStyles';
+import { getColors, createThemedStyles } from '@/styles/commonStyles';
+import { useTheme } from '@/contexts/ThemeContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Subject {
@@ -22,78 +23,82 @@ interface Subject {
   color: string;
 }
 
-const subjects: Subject[] = [
-  {
-    id: 1,
-    name: 'KALKULUS',
-    day: 'Sabtu',
-    time: '12.30-14.10',
-    sks: 3,
-    color: colors.primary,
-  },
-  {
-    id: 2,
-    name: 'TEKNOLOGI INFORMASI\n(otomatis perkantoran)',
-    day: 'Rabu',
-    time: '10.00-11.40',
-    sks: 3,
-    color: colors.secondary,
-  },
-  {
-    id: 3,
-    name: 'ALGORITMA DAN PEMOGRAMAN',
-    day: 'Jumat',
-    time: '13.00-14.40',
-    sks: 3,
-    color: colors.accent,
-  },
-  {
-    id: 4,
-    name: 'PENDIDIKAN AGAMA 1',
-    day: 'Sabtu',
-    time: '11.00-11.50',
-    sks: 1,
-    color: '#10b981',
-  },
-  {
-    id: 5,
-    name: 'BAHASA INDONESIA UNTUK\nPENULISAN ILMIAH',
-    day: 'Rabu',
-    time: '14.30-16.10',
-    sks: 2,
-    color: '#f59e0b',
-  },
-  {
-    id: 6,
-    name: 'KOMUNIKASI DIGITAL',
-    day: 'Sabtu',
-    time: '08.00-09.40',
-    sks: 3,
-    color: '#8b5cf6',
-  },
-  {
-    id: 7,
-    name: 'KECERDASAN EMOSIONAL',
-    day: 'Rabu',
-    time: '12.30-14.10',
-    sks: 2,
-    color: '#ef4444',
-  },
-  {
-    id: 8,
-    name: 'B.INGGRIS 1',
-    day: 'Jumat',
-    time: '15.00-16.40',
-    sks: 2,
-    color: '#06b6d4',
-  },
-];
-
 const dayOrder = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
 export default function ScheduleScreen() {
+  const { isDark } = useTheme();
+  const colors = getColors(isDark);
+  const themedStyles = createThemedStyles(isDark);
+  
   const [startDate, setStartDate] = useState(new Date(2024, 9, 8)); // October 8, 2024
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const subjects: Subject[] = [
+    {
+      id: 1,
+      name: 'KALKULUS',
+      day: 'Sabtu',
+      time: '12.30-14.10',
+      sks: 3,
+      color: colors.primary,
+    },
+    {
+      id: 2,
+      name: 'TEKNOLOGI INFORMASI\n(otomatis perkantoran)',
+      day: 'Rabu',
+      time: '10.00-11.40',
+      sks: 3,
+      color: colors.secondary,
+    },
+    {
+      id: 3,
+      name: 'ALGORITMA DAN PEMOGRAMAN',
+      day: 'Jumat',
+      time: '13.00-14.40',
+      sks: 3,
+      color: colors.accent,
+    },
+    {
+      id: 4,
+      name: 'PENDIDIKAN AGAMA 1',
+      day: 'Sabtu',
+      time: '11.00-11.50',
+      sks: 1,
+      color: colors.success,
+    },
+    {
+      id: 5,
+      name: 'BAHASA INDONESIA UNTUK\nPENULISAN ILMIAH',
+      day: 'Rabu',
+      time: '14.30-16.10',
+      sks: 2,
+      color: colors.warning,
+    },
+    {
+      id: 6,
+      name: 'KOMUNIKASI DIGITAL',
+      day: 'Sabtu',
+      time: '08.00-09.40',
+      sks: 3,
+      color: '#8b5cf6',
+    },
+    {
+      id: 7,
+      name: 'KECERDASAN EMOSIONAL',
+      day: 'Rabu',
+      time: '12.30-14.10',
+      sks: 2,
+      color: colors.error,
+    },
+    {
+      id: 8,
+      name: 'B.INGGRIS 1',
+      day: 'Jumat',
+      time: '15.00-16.40',
+      sks: 2,
+      color: '#06b6d4',
+    },
+  ];
 
   const totalSKS = subjects.reduce((sum, subject) => sum + subject.sks, 0);
 
@@ -135,18 +140,18 @@ export default function ScheduleScreen() {
   };
 
   const renderSubjectCard = (subject: Subject) => (
-    <View key={subject.id} style={[styles.subjectCard, commonStyles.card]}>
+    <View key={subject.id} style={[styles.subjectCard, themedStyles.card]}>
       <View style={[styles.subjectColorBar, { backgroundColor: subject.color }]} />
       <View style={styles.subjectContent}>
-        <Text style={styles.subjectName}>{subject.name}</Text>
+        <Text style={[styles.subjectName, { color: colors.text }]}>{subject.name}</Text>
         <View style={styles.subjectDetails}>
           <View style={styles.detailRow}>
             <IconSymbol name="clock" size={16} color={colors.textSecondary} />
-            <Text style={styles.detailText}>{subject.time}</Text>
+            <Text style={[styles.detailText, { color: colors.textSecondary }]}>{subject.time}</Text>
           </View>
           <View style={styles.detailRow}>
             <IconSymbol name="book.closed" size={16} color={colors.textSecondary} />
-            <Text style={styles.detailText}>{subject.sks} SKS</Text>
+            <Text style={[styles.detailText, { color: colors.textSecondary }]}>{subject.sks} SKS</Text>
           </View>
         </View>
       </View>
@@ -156,8 +161,8 @@ export default function ScheduleScreen() {
   const renderDaySchedule = (day: string) => (
     <View key={day} style={styles.dayContainer}>
       <View style={styles.dayHeader}>
-        <Text style={styles.dayTitle}>{day}</Text>
-        <Text style={styles.daySubjectCount}>
+        <Text style={[styles.dayTitle, { color: colors.text }]}>{day}</Text>
+        <Text style={[styles.daySubjectCount, { color: colors.textSecondary }]}>
           {groupedSubjects[day].length} mata kuliah
         </Text>
       </View>
@@ -166,12 +171,12 @@ export default function ScheduleScreen() {
   );
 
   return (
-    <SafeAreaView style={[commonStyles.wrapper, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <Text style={[commonStyles.title, styles.headerTitle]}>
+    <SafeAreaView style={[themedStyles.wrapper, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+        <Text style={[themedStyles.title, styles.headerTitle]}>
           Jadwal Kuliah
         </Text>
-        <Text style={styles.classInfo}>KRS KELAS C2</Text>
+        <Text style={[styles.classInfo, { color: colors.primary }]}>KRS KELAS C2</Text>
       </View>
 
       <ScrollView 
@@ -183,47 +188,47 @@ export default function ScheduleScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Start Date Section */}
-        <View style={[styles.dateSection, commonStyles.card]}>
+        <View style={[styles.dateSection, themedStyles.card]}>
           <View style={styles.dateSectionHeader}>
             <IconSymbol name="calendar" size={24} color={colors.primary} />
-            <Text style={styles.dateSectionTitle}>Tanggal Mulai Semester</Text>
+            <Text style={[styles.dateSectionTitle, { color: colors.text }]}>Tanggal Mulai Semester</Text>
           </View>
           <Pressable 
-            style={styles.dateButton}
+            style={[styles.dateButton, { backgroundColor: colors.highlight }]}
             onPress={() => setShowDatePicker(true)}
           >
-            <Text style={styles.dateText}>{formatDate(startDate)}</Text>
+            <Text style={[styles.dateText, { color: colors.text }]}>{formatDate(startDate)}</Text>
             <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
           </Pressable>
         </View>
 
         {/* Summary Section */}
-        <View style={[styles.summarySection, commonStyles.card]}>
+        <View style={[styles.summarySection, themedStyles.card]}>
           <View style={styles.summaryHeader}>
             <IconSymbol name="chart.bar" size={24} color={colors.primary} />
-            <Text style={styles.summaryTitle}>Ringkasan</Text>
+            <Text style={[styles.summaryTitle, { color: colors.text }]}>Ringkasan</Text>
           </View>
           <View style={styles.summaryStats}>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{subjects.length}</Text>
-              <Text style={styles.statLabel}>Mata Kuliah</Text>
+              <Text style={[styles.statNumber, { color: colors.primary }]}>{subjects.length}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Mata Kuliah</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{totalSKS}</Text>
-              <Text style={styles.statLabel}>Total SKS</Text>
+              <Text style={[styles.statNumber, { color: colors.primary }]}>{totalSKS}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Total SKS</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{sortedDays.length}</Text>
-              <Text style={styles.statLabel}>Hari Kuliah</Text>
+              <Text style={[styles.statNumber, { color: colors.primary }]}>{sortedDays.length}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Hari Kuliah</Text>
             </View>
           </View>
         </View>
 
         {/* Schedule by Day */}
         <View style={styles.scheduleSection}>
-          <Text style={styles.sectionTitle}>Jadwal Mingguan</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Jadwal Mingguan</Text>
           {sortedDays.map(renderDaySchedule)}
         </View>
       </ScrollView>
@@ -246,8 +251,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: colors.highlight,
-    backgroundColor: colors.card,
   },
   headerTitle: {
     marginBottom: 4,
@@ -255,7 +258,6 @@ const styles = StyleSheet.create({
   classInfo: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.primary,
     textAlign: 'center',
   },
   scrollView: {
@@ -278,7 +280,6 @@ const styles = StyleSheet.create({
   dateSectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: colors.text,
     marginLeft: 8,
   },
   dateButton: {
@@ -286,12 +287,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 12,
-    backgroundColor: colors.highlight,
     borderRadius: 8,
   },
   dateText: {
     fontSize: 16,
-    color: colors.text,
     fontWeight: '500',
   },
   summarySection: {
@@ -305,7 +304,6 @@ const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: colors.text,
     marginLeft: 8,
   },
   summaryStats: {
@@ -320,18 +318,15 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.primary,
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 14,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   statDivider: {
     width: 1,
     height: 40,
-    backgroundColor: colors.highlight,
   },
   scheduleSection: {
     marginBottom: 16,
@@ -339,7 +334,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
     marginBottom: 16,
   },
   dayContainer: {
@@ -355,11 +349,9 @@ const styles = StyleSheet.create({
   dayTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.text,
   },
   daySubjectCount: {
     fontSize: 14,
-    color: colors.textSecondary,
   },
   subjectCard: {
     flexDirection: 'row',
@@ -368,7 +360,6 @@ const styles = StyleSheet.create({
   },
   subjectColorBar: {
     width: 4,
-    backgroundColor: colors.primary,
   },
   subjectContent: {
     flex: 1,
@@ -377,7 +368,6 @@ const styles = StyleSheet.create({
   subjectName: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
     marginBottom: 8,
     lineHeight: 22,
   },
@@ -391,7 +381,6 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 14,
-    color: colors.textSecondary,
     marginLeft: 6,
   },
 });

@@ -1,12 +1,19 @@
+
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
-import { colors, commonStyles } from "@/styles/commonStyles";
+import { getColors, createThemedStyles } from "@/styles/commonStyles";
+import { useTheme } from "@/contexts/ThemeContext";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 
 export default function ProfileScreen() {
+  const { isDark } = useTheme();
+  const colors = getColors(isDark);
+  const themedStyles = createThemedStyles(isDark);
+
   return (
-    <SafeAreaView style={[commonStyles.wrapper, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[themedStyles.wrapper, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={[
@@ -16,7 +23,7 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Header */}
-        <View style={[styles.profileHeader, commonStyles.card]}>
+        <View style={[styles.profileHeader, themedStyles.card]}>
           <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
             <IconSymbol name="person.fill" color={colors.card} size={40} />
           </View>
@@ -26,7 +33,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* Academic Info */}
-        <View style={[styles.infoCard, commonStyles.card]}>
+        <View style={[styles.infoCard, themedStyles.card]}>
           <View style={[styles.infoIcon, { backgroundColor: colors.primary }]}>
             <IconSymbol name="graduationcap" color={colors.card} size={20} />
           </View>
@@ -36,7 +43,7 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View style={[styles.infoCard, commonStyles.card]}>
+        <View style={[styles.infoCard, themedStyles.card]}>
           <View style={[styles.infoIcon, { backgroundColor: colors.secondary }]}>
             <IconSymbol name="calendar" color={colors.card} size={20} />
           </View>
@@ -46,9 +53,9 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View style={[styles.infoCard, commonStyles.card]}>
+        <View style={[styles.infoCard, themedStyles.card]}>
           <View style={[styles.infoIcon, { backgroundColor: colors.accent }]}>
-            <IconSymbol name="chart.bar" color={colors.text} size={20} />
+            <IconSymbol name="chart.bar" color={isDark ? colors.background : colors.text} size={20} />
           </View>
           <View style={styles.infoContent}>
             <Text style={[styles.infoTitle, { color: colors.text }]}>Total SKS</Text>
@@ -56,8 +63,8 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View style={[styles.infoCard, commonStyles.card]}>
-          <View style={[styles.infoIcon, { backgroundColor: '#10b981' }]}>
+        <View style={[styles.infoCard, themedStyles.card]}>
+          <View style={[styles.infoIcon, { backgroundColor: colors.success }]}>
             <IconSymbol name="clock" color={colors.card} size={20} />
           </View>
           <View style={styles.infoContent}>
@@ -66,13 +73,21 @@ export default function ProfileScreen() {
           </View>
         </View>
 
+        {/* Settings Section */}
+        <View style={[styles.sectionHeader, { marginTop: 20 }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Pengaturan</Text>
+        </View>
+
+        {/* Theme Toggle Button */}
+        <ThemeToggleButton />
+
         {/* Contact Info */}
         <View style={[styles.sectionHeader, { marginTop: 20 }]}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Informasi Kontak</Text>
         </View>
 
-        <View style={[styles.infoCard, commonStyles.card]}>
-          <View style={[styles.infoIcon, { backgroundColor: '#f59e0b' }]}>
+        <View style={[styles.infoCard, themedStyles.card]}>
+          <View style={[styles.infoIcon, { backgroundColor: colors.warning }]}>
             <IconSymbol name="envelope" color={colors.card} size={20} />
           </View>
           <View style={styles.infoContent}>
@@ -81,8 +96,8 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View style={[styles.infoCard, commonStyles.card]}>
-          <View style={[styles.infoIcon, { backgroundColor: '#ef4444' }]}>
+        <View style={[styles.infoCard, themedStyles.card]}>
+          <View style={[styles.infoIcon, { backgroundColor: colors.error }]}>
             <IconSymbol name="phone" color={colors.card} size={20} />
           </View>
           <View style={styles.infoContent}>
